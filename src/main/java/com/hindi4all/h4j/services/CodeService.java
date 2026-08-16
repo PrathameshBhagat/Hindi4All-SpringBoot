@@ -18,4 +18,11 @@ public class CodeService {
         redisTemplate.opsForList().leftPush("jobs", codeobj.toString());
 
     }
+
+    // Poll redis for code execution results
+    public Object pollForID(String ID) {
+        // Get the results and retunrn
+        return redisTemplate.opsForValue().get("job" + ID);
+
+    }
 }

@@ -8,10 +8,9 @@ import com.hindi4all.h4j.services.CodeService;
 import lombok.AllArgsConstructor;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping; 
-
-
-import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * RestController
@@ -38,6 +37,20 @@ public class MyController {
         codeService.writeToRedisQueue(c);
 
         return new String("Hello");
-    }  
+    }
+
+    @GetMapping("/poll/{ID}")
+    public ResponseEntity pollForSuccessfulJobByID(@PathVariable String ID){
+
+        Object o  = codeService.pollForID(ID);
+
+        if( o != null ){
+            return ResponseEntity.ok(o);
+        } 
+
+        return ResponseEntity.ok()
+                    .body("{ 'status' : 'your code can be processing or rejected please retry' }");
+
+    }
     
 }
