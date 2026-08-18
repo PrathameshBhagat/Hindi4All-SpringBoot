@@ -3,14 +3,19 @@ package com.hindi4all.h4j.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hindi4all.h4j.dto.CodeDto;
+import com.hindi4all.h4j.dto.CodeSubmitDto;
 import com.hindi4all.h4j.services.CodeService;
 
 import lombok.AllArgsConstructor;
+
+import java.util.UUID;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * RestController
@@ -50,6 +55,19 @@ public class MyController {
 
         return ResponseEntity.ok()
                     .body("{ 'status' : 'your code can be processing or rejected please retry' }");
+
+    }
+
+    @PostMapping("/submitCode")
+    public UUID processCode(@RequestBody CodeSubmitDto code){
+
+        UUID ID = codeService.handleCode(code);
+
+        if( ID != null)
+
+            return ID;
+
+        throw new RuntimeException("Error Processing the code");
 
     }
     
