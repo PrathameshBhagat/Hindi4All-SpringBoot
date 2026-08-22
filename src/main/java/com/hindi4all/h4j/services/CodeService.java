@@ -11,13 +11,27 @@ import com.hindi4all.h4j.dto.CodeDto;
 import com.hindi4all.h4j.dto.CodeSubmitDto;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 @Service
-@AllArgsConstructor
 public class CodeService {
     
-    private final RedisTemplate<String, Object> redisTemplate ;
+    private final RedisTemplate<String, Object> redisTemplate;
 
+    @Qualifier
+    private final RedisTemplate<String, Object> redisStringTemplate;
+
+    public CodeService( RedisTemplate<String, Object> redisTemplate,
+        @Qualifier("StringOnlyRedisTemplate") 
+        RedisTemplate<String, Object> redisStringTemplate 
+    ){
+        
+        this.redisTemplate = redisTemplate;
+
+        // Specifically get string template
+        this.redisStringTemplate = redisStringTemplate;
+
+    }
     private RestClient restClient;
 
     public void writeToRedisQueue(CodeDto codeobj){
@@ -29,7 +43,7 @@ public class CodeService {
     // Poll redis for code execution results
     public Object pollForID(String ID) {
         // Get the results and retunrn
-        return redisTemplate.opsForValue().get("job" + ID);
+        return redisStringTemplate.opsForValue().get("job:" + ID);
 
     }
 
@@ -41,10 +55,19 @@ public class CodeService {
  
         String transpiledJavaCode = restClient.post()
         .uri("http://localhost/decode.php?comp=online&lang=java")
-        .contentType(MediaType.TEXT_PLAIN)
+        .contentType(MediaType.valueOf("text/plain;charset=utf-8"))
         .body(code.getCode())
+        .accept(MediaType.valueOf("text/plain;charset=utf-8"))
         .retrieve()
         .body(String.class);
+
+        CodeDto javaCode = new CodeDto(ID.toString(), transpiledJavaCode);
+
+        redisTemplate.opsForList().leftPush("jobs", javaCode);
+        
+        System.out.println("=>" + redisTemplate.opsForList().leftPop("jobs") );
+        redisTemplate.opsForList().leftPush("jobs", javaCode);
+        redisTemplate.opsForValue().set("job-status:" + ID.toString(), "PROCESSING");
 
         System.out.println(transpiledJavaCode);
 
