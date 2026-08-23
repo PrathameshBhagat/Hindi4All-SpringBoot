@@ -1,0 +1,35 @@
+.question {
+  font-family: "Roboto", sans-serif;
+  font-size:100%;margin: 0.1%;
+  text-align: center;} 
+ .CodeMirror {
+          border: 5px solid #aaa;
+            width: 50vw;display :inline-block;
+            height: 80vh;resize: both;font-size: 20px;
+          } 
+.ace-container  .ace_editor  { 
+            width: 50vw;border: 5px solid #aaa;
+            height: 80vh;resize: both;margin: 0;font-size: 20px;
+        }
+#N1,#N2{display:none;}
+#N1.show,#N2.show{
+    margin:0;
+    padding: 12px 20px;
+    color: #ffffff;
+    display: inline-block;
+    box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
+    background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
+    background: linear-gradient(135deg, #73a5ff, #5477f5);
+    position: fixed;
+    opacity: 100;
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+    border-radius: 2px;
+    text-decoration: none;
+    max-width: min-content;;
+    z-index: 2147483647;
+    right:10px;}
+#N1.show,
+#N2.show {
+  visibility: visible; 
+  -webkit-animation: fadeout 40s;
+  animation:fadeout 40s;}
