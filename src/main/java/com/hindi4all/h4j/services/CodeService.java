@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import com.hindi4all.h4j.dto.CodeDto;
+import com.hindi4all.h4j.dto.CodeExecutedResponseDTO;
 import com.hindi4all.h4j.dto.CodeSubmitDto;
 
 import lombok.AllArgsConstructor;
@@ -43,7 +44,12 @@ public class CodeService {
     // Poll redis for code execution results
     public Object pollForID(String ID) {
         // Get the results and retunrn
-        return redisStringTemplate.opsForValue().get("job:" + ID);
+        String s = (String) redisStringTemplate.opsForValue().get("job:" + ID);
+        if(s==null)
+
+            return null;
+System.out.println(s);
+        return new CodeExecutedResponseDTO("COMPLETED", s);
 
     }
 

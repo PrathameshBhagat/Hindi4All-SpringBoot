@@ -95,17 +95,18 @@ function save(){
 function run(){    
     document.getElementById("view").innerHTML="Compiling.... \n(कार्य प्रगति पर है....) ";
     var xhr = new XMLHttpRequest();
-    var a='{"language":"'+document.getElementsByName("lang")[0].value.toString()+'","username":"'+document.getElementsByName("uname")[0].value.toString()+'"}';
-    xhr.open("GET", "get.php?username="+document.getElementsByName("uname")[0].value.toString()+"&language="+document.getElementsByName("lang")[0].value.toString());
+    var a={"code": editor.getValue().toString() };
+   
+    xhr.open("POST", "http://localhost:8080/submitCode?username="+document.getElementsByName("uname")[0].value.toString()+"&language="+document.getElementsByName("lang")[0].value.toString());
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onload = function () {
         console.log("Run: "+this.response);
 
         console.log("Run: "+this.response);
-        var result=JSON.parse(this.response);
+        var result=this.response;
 
         // Store Job Id in local storage for polling later
-        localStorage.currentJobID = result.jobId;
+        localStorage.currentJobID = this.response;
 
         console.log("JOB ID recieved:" + localStorage.currentJobID );
 
@@ -113,8 +114,8 @@ function run(){
   
         //notiyfy
         noti("COMPILED","N2");
-    };console.log(a); 
-    xhr.send(a);
+    };console.log(JSON.stringify(a)); 
+    xhr.send(JSON.stringify(a));
 }
 function noti(data,n) {
   // Get the snackbar DIV
@@ -129,7 +130,7 @@ function noti(data,n) {
 function poll(jobId){
     
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "result.php?jobId="+jobId, true);
+    xhr.open("GET", "http://localhost:8080/poll/"+jobId, true);
     xhr.onload = function () {
 
         console.log(this.response);

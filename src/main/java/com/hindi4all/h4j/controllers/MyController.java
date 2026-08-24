@@ -54,18 +54,18 @@ public class MyController {
         } 
 
         return ResponseEntity.ok()
-                    .body("{ 'status' : 'your code can be processing or rejected please retry' }");
+                    .body("{ \"status\" : \"your code can be processing or rejected please retry\" }");
 
     }
 
     @PostMapping("/submitCode")
-    public UUID processCode(@RequestBody CodeSubmitDto code){
+    public String processCode(@RequestBody CodeSubmitDto code){
 
         UUID ID = codeService.handleCode(code);
 
         if( ID != null)
 
-            return ID;
+            return ID.toString();
 
         throw new RuntimeException("Error Processing the code");
 
