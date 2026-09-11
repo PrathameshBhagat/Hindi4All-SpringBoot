@@ -20,6 +20,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -33,3 +34,5 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+// postgresql://postgres:g8MAYnFHh6ZyjqHu@db.mxwkvvlayyzqcwmxbqcr.supabase.co:5432/postgres
+//g8MAYnFHh6ZyjqHu
