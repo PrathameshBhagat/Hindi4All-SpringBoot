@@ -1,0 +1,28 @@
+spring:
+  application:
+    name : h4j
+  data:
+    redis:
+      host: 
+      port: 19368
+      username: default
+      password: 
+      database: 0
+
+management.endpoints.web.exposure.include:
+  metrics
+
+# Clear the console layout pattern so it prints absolutely nothing
+logging:
+  file:
+    name:
+      logs/app-development.log
+  pattern:
+    console: "%d{mm:ss.SS} %highlight(%-5level) %cyan([ %-15logger{0} ] ) - %msg%n"
+
+    # setblock of class => %-20.20logger{20}) 
+    # strip the lines to 3 => %ex{3}
+    # strictly 3 lines of exception => %nopex
+
+
+# Original  %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{15}) - %msg%n
