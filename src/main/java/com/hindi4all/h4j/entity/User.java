@@ -3,19 +3,18 @@ package com.hindi4all.h4j.entity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity 
 @Getter 
 @Setter 
-@AllArgsConstructor 
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "users")
 public class User{
 
     @Id 
