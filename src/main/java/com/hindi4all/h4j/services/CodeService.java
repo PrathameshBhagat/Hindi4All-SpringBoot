@@ -1,7 +1,11 @@
 package com.hindi4all.h4j.services;
 
+import java.time.Instant;
 import java.util.UUID;
 
+import com.hindi4all.h4j.entity.ExecutionStatus;
+import com.hindi4all.h4j.entity.Submission;
+import com.hindi4all.h4j.repository.SubmissionRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -19,15 +23,18 @@ public class CodeService {
     
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private final SubmissionRepository submissionRepository;
+
     @Qualifier
     private final RedisTemplate<String, Object> redisStringTemplate;
 
-    public CodeService( RedisTemplate<String, Object> redisTemplate,
+    public CodeService( RedisTemplate<String, Object> redisTemplate, SubmissionRepository submissionRepository,
         @Qualifier("StringOnlyRedisTemplate") 
         RedisTemplate<String, Object> redisStringTemplate 
     ){
         
         this.redisTemplate = redisTemplate;
+        this.submissionRepository = submissionRepository;
 
         // Specifically get string template
         this.redisStringTemplate = redisStringTemplate;
@@ -74,6 +81,22 @@ System.out.println(s);
         System.out.println("=>" + redisTemplate.opsForList().leftPop("jobs") );
         redisTemplate.opsForList().leftPush("jobs", javaCode);
         redisTemplate.opsForValue().set("job-status:" + ID.toString(), "PROCESSING");
+
+        // Save to database
+        submissionRepository.save(
+                new Submission(
+                    null,
+                    new UUID(8,8),
+                    ExecutionStatus.EXECUTING,
+                    transpiledJavaCode,
+                    "null",
+                    null,
+                    null,
+                    Instant.now(),
+                    0L,
+                    Instant.now(),
+                    Instant.now()
+        ));
 
         System.out.println(transpiledJavaCode);
 
